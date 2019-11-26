@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use app\models\query\ProjectQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -14,9 +14,9 @@ use yii\db\ActiveRecord;
  * @property string $description
  * @property int $active
  * @property int $creator_id
- * @property int|null $updater_id
+ * @property int $updater_id
  * @property int $created_at
- * @property int|null $updated_at
+ * @property int $updated_at
  *
  * @property User $creator
  * @property User $updater
@@ -24,14 +24,6 @@ use yii\db\ActiveRecord;
  */
 class Project extends ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'project';
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -91,10 +83,10 @@ class Project extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return Query the active query used by this AR class.
+     * @return ProjectQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new Query(get_called_class());
+        return new ProjectQuery(get_called_class());
     }
 }

@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use app\models\query\ProjectUserQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -12,7 +12,7 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property int $project_id
  * @property int $user_id
- * @property string|null $role
+ * @property string $role
  *
  * @property Project $project
  * @property User $user
@@ -73,10 +73,10 @@ class ProjectUser extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return Query the active query used by this AR class.
+     * @return ProjectUserQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new Query(get_called_class());
+        return new ProjectUserQuery(get_called_class());
     }
 }

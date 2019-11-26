@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use Yii;
+use app\models\query\TaskQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -12,14 +12,14 @@ use yii\db\ActiveRecord;
  * @property int $id
  * @property string $title
  * @property string $description
- * @property int|null $project_id
- * @property int|null $executor_id
- * @property int|null $started_at
- * @property int|null $completed_at
+ * @property int $project_id
+ * @property int $executor_id
+ * @property int $started_at
+ * @property int $completed_at
  * @property int $creator_id
- * @property int|null $updater_id
+ * @property int $updater_id
  * @property int $created_at
- * @property int|null $updated_at
+ * @property int $updated_at
  *
  * @property User $executor
  * @property User $creator
@@ -98,10 +98,10 @@ class Task extends ActiveRecord
 
     /**
      * {@inheritdoc}
-     * @return Query the active query used by this AR class.
+     * @return TaskQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new Query(get_called_class());
+        return new TaskQuery(get_called_class());
     }
 }

@@ -1,15 +1,16 @@
 <?php
 
-namespace common\models;
+namespace common\models\query;
 
+use common\models\Project;
 use yii\db\ActiveQuery;
 
 /**
- * This is the ActiveQuery class for [[Task]].
+ * This is the ActiveQuery class for [[Project]].
  *
- * @see Task
+ * @see Project
  */
-class Query extends ActiveQuery
+class ProjectQuery extends ActiveQuery
 {
     /*public function active()
     {
@@ -18,7 +19,7 @@ class Query extends ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return Task[]|array
+     * @return Project[]|array
      */
     public function all($db = null)
     {
@@ -27,7 +28,7 @@ class Query extends ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return Task|array|null
+     * @return Project|array|null
      */
     public function one($db = null)
     {
