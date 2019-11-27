@@ -2,7 +2,9 @@
 
 namespace common\models;
 
-use app\models\query\ProjectQuery;
+use common\models\query\ProjectQuery;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -24,6 +26,26 @@ use yii\db\ActiveRecord;
  */
 class Project extends ActiveRecord
 {
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'creator_id',
+                'updatedByAttribute' => 'updater_id',
+            ],
+            TimestampBehavior::class,
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'project';
+    }
+
     /**
      * {@inheritdoc}
      */

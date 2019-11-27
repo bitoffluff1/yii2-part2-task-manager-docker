@@ -2,7 +2,9 @@
 
 namespace common\models;
 
-use app\models\query\TaskQuery;
+use common\models\query\TaskQuery;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -27,6 +29,18 @@ use yii\db\ActiveRecord;
  */
 class Task extends ActiveRecord
 {
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'creator_id',
+                'updatedByAttribute' => 'updater_id',
+            ],
+            TimestampBehavior::class,
+        ];
+    }
+
     /**
      * {@inheritdoc}
      */
