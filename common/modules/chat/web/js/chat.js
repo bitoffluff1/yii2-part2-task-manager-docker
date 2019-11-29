@@ -1,12 +1,12 @@
 function handlerAddMessage(event){
-    const $input = event.currentTarget.previousElementSibling;
+    const input = event.currentTarget.previousElementSibling;
 
-    const $p = document.createElement('p');
-    $p.textContent = $input.value;
+    const p = document.createElement('p');
+    p.textContent = input.value;
 
-    document.getElementById('chatTextarea').append($p);
+    document.getElementById('chatTextarea').append(p);
 
-    $input.value ='';
+    input.value ='';
 }
 
 document.querySelector('.form > button').addEventListener('click', handlerAddMessage);

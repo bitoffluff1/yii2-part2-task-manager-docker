@@ -1,5 +1,7 @@
 <?php
 
+use common\models\Project;
+use common\models\User;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -33,10 +35,30 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'description:ntext',
             'active',
-            'creator_id',
-            'updater_id',
-            'created_at',
-            'updated_at',
+            [
+                'label' => 'Создал',
+                'attribute' => 'creator_id',
+                'value' => function (Project $model) {
+                    $user = User::findOne($model->creator_id);
+                    return $user->username;
+                }
+            ],
+            [
+                'label' => 'Изменил',
+                'attribute' => 'updater_id',
+                'value' => function (Project $model) {
+                    $user = User::findOne($model->creator_id);
+                    return $user->username;
+                }
+            ],
+            [
+                'attribute' => 'created_at',
+                'format'=> ['date'],
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format'=> ['date'],
+            ],
         ],
     ]) ?>
 
