@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\TaskQuery;
+use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -57,7 +58,8 @@ class Task extends ActiveRecord
         return [
             [['title', 'description'], 'required'],
             [['description'], 'string'],
-            [['project_id', 'executor_id', 'started_at', 'completed_at', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
+            [['project_id', 'executor_id', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
+            [['started_at', 'completed_at'], 'date', 'format' => 'php:' . Yii::$app->params['formatDate']],
             [['title'], 'string', 'max' => 255],
             [['title', 'description'], 'trim'],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
