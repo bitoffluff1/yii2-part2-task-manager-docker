@@ -21,6 +21,12 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ *
+ * @property Task[] $activedTasks
+ * @property Task[] $createdTasks
+ * @property Task[] $updatedTasks
+ * @property Project[] $createdProjects
+ * @property Project[] $updatedProjects
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -205,5 +211,30 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function getActivedTasks()
+    {
+        return $this->hasMany(Task::class, ['executor_id' => 'id']);
+    }
+
+    public function getCreatedTasks()
+    {
+        return $this->hasMany(Task::class, ['creator_id' => 'id']);
+    }
+
+    public function getUpdatedTasks()
+    {
+        return $this->hasMany(Task::class, ['updater_id' => 'id']);
+    }
+
+    public function getCreatedProjects()
+    {
+        return $this->hasMany(Project::class, ['creator_id' => 'id']);
+    }
+
+    public function getUpdatedProjects()
+    {
+        return $this->hasMany(Project::class, ['updater_id' => 'id']);
     }
 }
