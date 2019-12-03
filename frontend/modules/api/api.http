@@ -1,0 +1,30 @@
+GET http://localhost:20080/api/project?expand=tasks
+
+###
+GET http://localhost:20080/api/task?expand=project
+
+###
+GET http://localhost:20080/api/projects/1
+
+###
+POST http://localhost:20080/api/projects
+Content-Type: application/json
+
+{
+  "title": "Проект 3",
+  "description": "Описание проекта 3",
+  "creator_id": 1
+}
+
+###
+PATCH http://localhost:20080/api/projects/3
+Content-Type: application/json
+
+{
+  "title": "Новый проект 3"
+}
+
+###
+DELETE http://localhost:20080/api/projects/3
+
+###

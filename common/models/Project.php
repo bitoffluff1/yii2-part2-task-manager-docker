@@ -23,17 +23,18 @@ use yii\db\ActiveRecord;
  * @property User $creator
  * @property User $updater
  * @property ProjectUser[] $projectUsers
+ * @property Task[] $tasks
  */
 class Project extends ActiveRecord
 {
     public function behaviors()
     {
         return [
-            [
-                'class' => BlameableBehavior::class,
-                'createdByAttribute' => 'creator_id',
-                'updatedByAttribute' => 'updater_id',
-            ],
+//            [
+//                'class' => BlameableBehavior::class,
+//                'createdByAttribute' => 'creator_id',
+//                'updatedByAttribute' => 'updater_id',
+//            ],
             TimestampBehavior::class,
         ];
     }
@@ -101,6 +102,14 @@ class Project extends ActiveRecord
     public function getProjectUsers()
     {
         return $this->hasMany(ProjectUser::class, ['project_id' => 'id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getTasks()
+    {
+        return $this->hasMany(Task::class, ['project_id' => 'id']);
     }
 
     /**

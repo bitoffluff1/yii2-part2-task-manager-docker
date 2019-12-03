@@ -27,6 +27,7 @@ use yii\db\ActiveRecord;
  * @property User $executor
  * @property User $creator
  * @property User $updater
+ * @property Project $project
  */
 class Task extends ActiveRecord
 {
@@ -110,6 +111,14 @@ class Task extends ActiveRecord
     public function getUpdater()
     {
         return $this->hasOne(User::class, ['id' => 'updater_id']);
+    }
+
+    /**
+     * @return ActiveQuery
+     */
+    public function getProject()
+    {
+        return $this->hasOne(Project::class, ['id' => 'project_id']);
     }
 
     /**
