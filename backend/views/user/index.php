@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             [
                 'attribute' => 'status',
+                'filter' => User::STATUS_LABELS,
                 'value' => function (User $model) {
                     return User::STATUS_LABELS[$model->status];
                 }

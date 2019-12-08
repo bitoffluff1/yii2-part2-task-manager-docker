@@ -96,9 +96,12 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['username', 'email', 'password'], 'required'],
             [['username', 'email', 'password'], 'safe'],
+            [['username', 'email', 'password'], 'trim'],
             [['email'], 'email'],
+
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => self::STATUSES],
+
             [['avatar'], 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCENARIO_UPDATE]],
         ];
     }

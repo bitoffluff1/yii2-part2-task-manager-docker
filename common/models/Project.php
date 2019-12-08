@@ -3,6 +3,7 @@
 namespace common\models;
 
 use common\models\query\ProjectQuery;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
@@ -27,15 +28,34 @@ use yii\db\ActiveRecord;
  */
 class Project extends ActiveRecord
 {
+    const RELATION_PROJECT_USERS = 'projectUsers';
+
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 1;
+
+    const STATUSES = [
+        self::STATUS_INACTIVE,
+        self::STATUS_ACTIVE,
+    ];
+
+    const STATUS_LABELS = [
+        self::STATUS_INACTIVE => 'Не активный',
+        self::STATUS_ACTIVE => 'Активный'
+    ];
+
     public function behaviors()
     {
         return [
-//            [
-//                'class' => BlameableBehavior::class,
-//                'createdByAttribute' => 'creator_id',
-//                'updatedByAttribute' => 'updater_id',
-//            ],
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'creator_id',
+                'updatedByAttribute' => 'updater_id',
+            ],
             TimestampBehavior::class,
+            'saveRelations' => [
+                'class'     => SaveRelationsBehavior::class,
+                'relations' => [self::RELATION_PROJECT_USERS],
+            ],
         ];
     }
 
@@ -54,10 +74,13 @@ class Project extends ActiveRecord
     {
         return [
             [['title', 'description'], 'required'],
-            [['description'], 'string'],
-            [['active', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
-            [['title'], 'string', 'max' => 255],
             [['title', 'description'], 'trim'],
+            [['title'], 'string', 'max' => 150],
+            [['description'], 'string', 'max' => 255],
+
+            [['active'], 'in', 'range' => self::STATUSES],
+            [['active'], 'default', 'value' => self::STATUS_ACTIVE],
+
             [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['creator_id' => 'id']],
             [['updater_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updater_id' => 'id']],
         ];

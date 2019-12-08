@@ -2,7 +2,7 @@
 
 namespace common\models;
 
-use app\models\query\ProjectUserQuery;
+use common\models\query\ProjectUserQuery;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
@@ -19,6 +19,22 @@ use yii\db\ActiveRecord;
  */
 class ProjectUser extends ActiveRecord
 {
+    const ROLE_DEVELOPER = 'developer';
+    const ROLE_TESTER = 'tester';
+    const ROLE_MANAGER = 'manager';
+
+    const ROLES = [
+        self::ROLE_DEVELOPER,
+        self::ROLE_TESTER,
+        self::ROLE_MANAGER,
+    ];
+
+    const ROLES_LABELS = [
+        self::ROLE_DEVELOPER => 'Разработчик',
+        self::ROLE_TESTER => 'Тестировщик',
+        self::ROLE_MANAGER => 'Менеджер',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -33,10 +49,12 @@ class ProjectUser extends ActiveRecord
     public function rules()
     {
         return [
-            [['project_id', 'user_id'], 'required'],
+            [['project_id', 'user_id', 'role'], 'required'],
             [['project_id', 'user_id'], 'integer'],
+
             [['role'], 'string'],
-            [['role'], 'in', 'range' => ['manager', 'developer', 'tester']],
+            [['role'], 'in', 'range' => self::ROLES],
+
             [['project_id'], 'exist', 'skipOnError' => true, 'targetClass' => Project::class, 'targetAttribute' => ['project_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
