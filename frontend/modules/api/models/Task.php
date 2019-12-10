@@ -18,7 +18,7 @@ class Task extends \common\models\Task
     public function extraFields()
     {
         return [
-            'project' => function ($model){
+            self::RELATION_PROJECT => function ($model) {
                 return $this->project;
             }
         ];

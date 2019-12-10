@@ -31,6 +31,11 @@ use yii\db\ActiveRecord;
  */
 class Task extends ActiveRecord
 {
+    const RELATION_EXECUTOR = 'executor';
+    const RELATION_CREATOR = 'creator';
+    const RELATION_UPDATER = 'updater';
+    const RELATION_PROJECT = 'project';
+
     public function behaviors()
     {
         return [

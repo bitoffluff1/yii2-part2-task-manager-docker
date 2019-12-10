@@ -1,8 +1,10 @@
 <?php
 
+use common\models\Project;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -19,22 +21,22 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'title',
             'description:ntext',
-            'active',
-            'creator_id',
-            //'updater_id',
-            //'created_at',
-            //'updated_at',
+            [
+                'attribute' => 'active',
+                'filter' => Project::STATUS_LABELS,
+                'value' => function (Project $model) {
+                    return Project::STATUS_LABELS[$model->active];
+                }
+            ],
+            'created_at:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

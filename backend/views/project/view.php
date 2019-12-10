@@ -1,10 +1,17 @@
 <?php
 
+use common\models\Project;
+use common\models\ProjectUser;
+use common\models\User;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Project */
+/* @var $creator common\models\User */
+/* @var $updater common\models\User */
+/* @var $dataProviderProjectUser common\models\ProjectUser */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
@@ -32,12 +39,46 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'title',
             'description:ntext',
-            'active',
-            'creator_id',
-            'updater_id',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'active',
+                'filter' => Project::STATUS_LABELS,
+                'value' => function (Project $model) {
+                    return Project::STATUS_LABELS[$model->active];
+                }
+            ],
+            [
+                'attribute' => 'creator_id',
+                'value' => $creator->username,
+            ],
+            [
+                'attribute' => 'updater_id',
+                'value' => $updater->username,
+            ],
+            'created_at:datetime',
         ],
     ]) ?>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProviderProjectUser,
+        'columns' => [
+            [
+                'attribute' => 'user_id',
+                'label' => 'Пользователь',
+                'value' => function (ProjectUser $model) {
+                    return $model->user->username;
+                }
+            ],
+            'role',
+            [
+                'format' => 'raw',
+                'value' => function(ProjectUser $model){
+                    return Html::a(
+                        'Перейти',
+                        '/user/view?id=' . $model->user_id
+                    );
+                }
+            ],
+        ],
+    ]); ?>
 
 </div>

@@ -1,5 +1,9 @@
 <?php
 
+use common\models\Project;
+use common\models\ProjectUser;
+use common\models\User;
+use unclead\multipleinput\MultipleInput;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -16,15 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'active')->textInput() ?>
-
-    <?= $form->field($model, 'creator_id')->textInput() ?>
-
-    <?= $form->field($model, 'updater_id')->textInput() ?>
-
-    <?= $form->field($model, 'created_at')->textInput() ?>
-
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+    <?= $form->field($model, 'active')->dropDownList(Project::STATUS_LABELS) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

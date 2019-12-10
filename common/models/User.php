@@ -34,6 +34,12 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+    const RELATION_ACTIVED_TASKS = 'activedTasks';
+    const RELATION_CREATED_TASKS = 'createdTasks';
+    const RELATION_UPDATED_TASKS = 'updatedTasks';
+    const RELATION_CREATED_PROJECTS = 'createdProjects';
+    const RELATION_UPDATED_PROJECTS = 'updatedProjects';
+
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
@@ -96,9 +102,12 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             [['username', 'email', 'password'], 'required'],
             [['username', 'email', 'password'], 'safe'],
+            [['username', 'email', 'password'], 'trim'],
             [['email'], 'email'],
+
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => self::STATUSES],
+
             [['avatar'], 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCENARIO_UPDATE]],
         ];
     }
