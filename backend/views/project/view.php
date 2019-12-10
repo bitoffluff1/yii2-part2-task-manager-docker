@@ -11,7 +11,7 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Project */
 /* @var $creator common\models\User */
 /* @var $updater common\models\User */
-/* @var $projectUser common\models\ProjectUser */
+/* @var $dataProviderProjectUser common\models\ProjectUser */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
@@ -59,14 +59,13 @@ $this->params['breadcrumbs'][] = $this->title;
     ]) ?>
 
     <?= GridView::widget([
-        'dataProvider' => $projectUser,
+        'dataProvider' => $dataProviderProjectUser,
         'columns' => [
             [
                 'attribute' => 'user_id',
                 'label' => 'Пользователь',
                 'value' => function (ProjectUser $model) {
-                    $user = User::findOne($model->user_id);
-                    return $user->username;
+                    return $model->user->username;
                 }
             ],
             'role',

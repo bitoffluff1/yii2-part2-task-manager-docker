@@ -59,7 +59,7 @@ class ProjectController extends Controller
 
         $projectUser = ProjectUser::find()->where(['project_id' => $id]);
 
-        $dataProvider = new ActiveDataProvider([
+        $dataProviderProjectUser = new ActiveDataProvider([
             'query' => $projectUser,
         ]);
 
@@ -67,7 +67,7 @@ class ProjectController extends Controller
             'model' => $project,
             'creator' => $project->creator,
             'updater' => $project->updater,
-            'projectUser' => $dataProvider,
+            'dataProviderProjectUser' => $dataProviderProjectUser,
         ]);
     }
 

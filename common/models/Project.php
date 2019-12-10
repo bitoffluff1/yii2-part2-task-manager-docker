@@ -28,7 +28,10 @@ use yii\db\ActiveRecord;
  */
 class Project extends ActiveRecord
 {
+    const RELATION_CREATOR = 'creator';
+    const RELATION_UPDATER = 'updater';
     const RELATION_PROJECT_USERS = 'projectUsers';
+    const RELATION_TASKS = 'tasks';
 
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE = 1;
@@ -53,7 +56,7 @@ class Project extends ActiveRecord
             ],
             TimestampBehavior::class,
             'saveRelations' => [
-                'class'     => SaveRelationsBehavior::class,
+                'class' => SaveRelationsBehavior::class,
                 'relations' => [self::RELATION_PROJECT_USERS],
             ],
         ];
