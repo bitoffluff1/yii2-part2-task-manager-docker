@@ -131,7 +131,7 @@ class Project extends ActiveRecord
     /**
      * @return array [id1=>role1, id2->role2...]
      */
-    public function getUserRules()
+    public function getUserRoles()
     {
         return $this->getProjectUsers()->select('role')->indexBy('user_id')->column();
     }

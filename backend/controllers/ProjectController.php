@@ -36,7 +36,7 @@ class ProjectController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => ['admin']
                     ]
                 ],
             ],
@@ -111,14 +111,12 @@ class ProjectController extends Controller
     {
         $model = $this->findModel($id);
 
-        $userRules = $model->getUserRules();
+        $userRoles = $model->getUserRoles();
 
         if ($this->loadModel($model) && $model->save()) {
-            $diffRules = Yii::$app->projectService->getDiffArray($model->getUserRules(), $userRules);
-
-            if ($diffRules){
-                foreach ($diffRules as $userId => $diffRule) {
-                    Yii::$app->projectService->assignRole($model, User::findOne($userId), $diffRule);
+            if ($diffRoles = array_diff_assoc($model->getUserRoles(), $userRoles)){
+                foreach ($diffRoles as $userId => $diffRole) {
+                    Yii::$app->projectService->assignRole($model, User::findOne($userId), $diffRole);
                 }
             }
 

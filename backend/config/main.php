@@ -50,29 +50,14 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<controller:(project|task|user)>/<id:\d+>/<action:(create|update|delete)>' => '<controller>/<action>',
+                '<controller:(project|task|user)>/<id:\d+>' => '<controller>/view',
+                '<controller:(project|task|user)>s' => '<controller>/index',
+
                 '/' => 'site/index',
                 '/login' => 'site/login',
                 '/logout' => 'site/logout',
                 '/signup' => 'site/signup',
-
-                '/users' => 'user/index',
-                '/user/<id:\d+>' => 'user/view',
-                '/user/profile' => 'user/profile',
-                '/user/insert/<id:\d+>' => 'user/insert',
-                '/user/update/<id:\d+>' => 'user/update',
-                '/user/delete/<id:\d+>' => 'user/delete',
-
-                '/projects' => 'project/index',
-                '/project/<id:\d+>' => 'project/view',
-                '/project/insert/<id:\d+>' => 'project/insert',
-                '/project/update/<id:\d+>' => 'project/update',
-                '/project/delete/<id:\d+>' => 'project/delete',
-
-                '/tasks' => 'task/index',
-                '/task/<id:\d+>' => 'task/view',
-                '/task/insert/<id:\d+>' => 'task/insert',
-                '/task/update/<id:\d+>' => 'task/update',
-                '/task/delete/<id:\d+>' => 'task/delete',
             ],
         ],
     ],

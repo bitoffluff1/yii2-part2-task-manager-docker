@@ -20,9 +20,4 @@ class ProjectService extends Component
         $event->role = $role;
         $this->trigger(self::EVENT_ASSIGN_ROLE, $event);
     }
-
-    public function getDiffArray($newArray, $oldArray)
-    {
-        return array_diff_assoc($newArray, $oldArray);
-    }
 }
