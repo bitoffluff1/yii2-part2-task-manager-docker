@@ -1,4 +1,5 @@
 <?php
+
 namespace backend\controllers;
 
 use Yii;
@@ -6,6 +7,7 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use yii\web\NotFoundHttpException;
 
 /**
  * Site controller
@@ -19,21 +21,22 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['login', 'error'],
                         'allow' => true,
+                        'actions' => ['login'],
+                        'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['@'],
+                        'actions' => ['login', 'logout', 'index'],
+                        'roles' => ['admin'],
                     ],
                 ],
             ],
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'logout' => ['post'],
                 ],
@@ -95,6 +98,6 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect('login');
     }
 }

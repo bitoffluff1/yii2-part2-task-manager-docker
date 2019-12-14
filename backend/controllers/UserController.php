@@ -2,9 +2,12 @@
 
 namespace backend\controllers;
 
+use common\models\ProjectUser;
 use Yii;
 use common\models\User;
 use common\models\search\UserSearch;
+use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,9 +24,19 @@ class UserController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index', 'view', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ]
                 ],
             ],
         ];
@@ -52,8 +65,15 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $projectUser = ProjectUser::find()->where(['user_id' => $id]);
+
+        $dataProviderProjectUser = new ActiveDataProvider([
+            'query' => $projectUser,
+        ]);
+
         return $this->render('view', [
             'model' => $this->findModel($id),
+            'dataProviderProjectUser' => $dataProviderProjectUser,
         ]);
     }
 
@@ -65,6 +85,8 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = new User();
+
+        $model->setScenario(User::SCENARIO_INSERT);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -85,6 +107,21 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+
+        $model->setScenario(User::SCENARIO_UPDATE);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionProfile()
+    {
+        $model = $this->findModel(Yii::$app->user->identity->getId());
 
         $model->setScenario(User::SCENARIO_UPDATE);
 

@@ -1,11 +1,14 @@
 <?php
 
+use common\models\ProjectUser;
 use common\models\User;
+use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\User */
+/* @var $dataProviderProjectUser common\models\ProjectUser*/
 
 $this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
@@ -48,5 +51,28 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_at:datetime',
         ],
     ]) ?>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProviderProjectUser,
+        'columns' => [
+            [
+                'attribute' => 'project_id',
+                'label' => 'Проекты',
+                'value' => function (ProjectUser $model) {
+                    return $model->project->title;
+                }
+            ],
+            'role',
+            [
+                'format' => 'raw',
+                'value' => function(ProjectUser $model){
+                    return Html::a(
+                        'Перейти в проект',
+                        '/project/view?id=' . $model->project_id
+                    );
+                }
+            ],
+        ],
+    ]); ?>
 
 </div>

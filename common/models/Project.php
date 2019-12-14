@@ -106,36 +106,34 @@ class Project extends ActiveRecord
         ];
     }
 
-    /**
-     * @return ActiveQuery
-     */
     public function getCreator()
     {
         return $this->hasOne(User::class, ['id' => 'creator_id']);
     }
 
-    /**
-     * @return ActiveQuery
-     */
     public function getUpdater()
     {
         return $this->hasOne(User::class, ['id' => 'updater_id']);
     }
 
-    /**
-     * @return ActiveQuery
-     */
+
     public function getProjectUsers()
     {
         return $this->hasMany(ProjectUser::class, ['project_id' => 'id']);
     }
 
-    /**
-     * @return ActiveQuery
-     */
+
     public function getTasks()
     {
         return $this->hasMany(Task::class, ['project_id' => 'id']);
+    }
+
+    /**
+     * @return array [id1=>role1, id2->role2...]
+     */
+    public function getUserRoles()
+    {
+        return $this->getProjectUsers()->select('role')->indexBy('user_id')->column();
     }
 
     /**
