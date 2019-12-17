@@ -1,10 +1,10 @@
 <?php
 
-use common\modules\chat\Module;
 use common\services\EmailService;
 use common\services\events\AssignRoleEvent;
 use common\services\NotificationService;
 use common\services\ProjectService;
+use common\services\TaskService;
 
 return [
     'aliases' => [
@@ -13,6 +13,14 @@ return [
     ],
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
+        'i18n' => [
+            'translations' => [
+                'yii2mod.comments' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@yii2mod/comments/messages',
+                ],
+            ],
+        ],
         'assetManager' => [
             'appendTimestamp' => true,
         ],
@@ -21,6 +29,9 @@ return [
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
+        ],
+        'taskService' => [
+            'class' => TaskService::class,
         ],
         'emailService' => [
             'class' => EmailService::class,
@@ -37,7 +48,10 @@ return [
     ],
     'modules' => [
         'chat' => [
-            'class' => Module::class,
+            'class' => \common\modules\chat\Module::class,
+        ],
+        'comment' => [
+            'class' => \yii2mod\comments\Module::class,
         ],
     ],
 ];

@@ -12,11 +12,6 @@ use yii\db\ActiveQuery;
  */
 class ProjectUserQuery extends ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * {@inheritdoc}
      * @return ProjectUser[]|array
@@ -33,5 +28,16 @@ class ProjectUserQuery extends ActiveQuery
     public function one($db = null)
     {
         return parent::one($db);
+    }
+
+    public function byUser($userId, $role = null)
+    {
+        $this->andWhere(['user_id' => $userId]);
+
+        if ($role) {
+            $this->andWhere(['role' => $role]);
+        }
+
+        return $this;
     }
 }

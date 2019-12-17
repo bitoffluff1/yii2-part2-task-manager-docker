@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\query\UserQuery;
 use mohorev\file\UploadImageBehavior;
 use Yii;
 use yii\base\NotSupportedException;
@@ -303,5 +304,20 @@ class User extends ActiveRecord implements IdentityInterface
     public function getUpdatedProjects()
     {
         return $this->hasMany(Project::class, ['updater_id' => 'id']);
+    }
+
+    public function getAvatar()
+    {
+        return $this->getThumbUploadUrl('avatar', self::AVATAR_ICO);
+    }
+
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public static function find()
+    {
+        return new UserQuery(get_called_class());
     }
 }

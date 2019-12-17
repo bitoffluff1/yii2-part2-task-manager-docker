@@ -2,6 +2,7 @@
 
 namespace common\models\query;
 
+use common\models\Project;
 use common\models\Task;
 use yii\db\ActiveQuery;
 
@@ -12,11 +13,6 @@ use yii\db\ActiveQuery;
  */
 class TaskQuery extends ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * {@inheritdoc}
      * @return Task[]|array
@@ -33,5 +29,12 @@ class TaskQuery extends ActiveQuery
     public function one($db = null)
     {
         return parent::one($db);
+    }
+
+    public function byUser($userId, $role = null)
+    {
+        $query = Project::find()->select('id')->byUser($userId, $role);
+
+        return $this->andWhere(['project_id' => $query]);
     }
 }

@@ -49,6 +49,9 @@ class TaskController extends Controller
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $query = $dataProvider->query;
+        $query->byUser(Yii::$app->user->getId());
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

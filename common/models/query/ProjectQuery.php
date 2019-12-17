@@ -3,6 +3,7 @@
 namespace common\models\query;
 
 use common\models\Project;
+use common\models\ProjectUser;
 use yii\db\ActiveQuery;
 
 /**
@@ -12,11 +13,6 @@ use yii\db\ActiveQuery;
  */
 class ProjectQuery extends ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * {@inheritdoc}
      * @return Project[]|array
@@ -33,5 +29,12 @@ class ProjectQuery extends ActiveQuery
     public function one($db = null)
     {
         return parent::one($db);
+    }
+
+    public function byUser($userId, $role = null)
+    {
+        $query = ProjectUser::find()->select('project_id')->byUser($userId, $role);
+
+        return $this->andWhere(['id' => $query]);
     }
 }
