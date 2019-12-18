@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use common\models\ProjectUser;
+use common\models\Task;
 use common\models\User;
 use Yii;
 use common\models\Project;
@@ -51,6 +52,10 @@ class ProjectController extends Controller
     {
         $searchModel = new ProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        //$task = Task::findOne(1);
+        //$user = User::findOne(1);
+        //var_dump(Yii::$app->taskService->completeTask($task, $user));
 
         return $this->render('index', [
             'searchModel' => $searchModel,

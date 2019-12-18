@@ -63,11 +63,10 @@ class Task extends ActiveRecord
     {
         return [
             [['title', 'description'], 'required'],
-            [['description'], 'string'],
-            [['project_id', 'executor_id', 'creator_id', 'updater_id', 'created_at', 'updated_at'], 'integer'],
-            [['started_at', 'completed_at'], 'date', 'format' => 'php:' . Yii::$app->params['formatDate']],
-            [['title'], 'string', 'max' => 255],
             [['title', 'description'], 'trim'],
+            [['title'], 'string', 'max' => 255],
+            [['description'], 'string'],
+            [['project_id', 'executor_id', 'creator_id', 'updater_id', 'created_at', 'updated_at', 'started_at', 'completed_at'], 'integer'],
             [['executor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['executor_id' => 'id']],
             [['creator_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['creator_id' => 'id']],
             [['updater_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['updater_id' => 'id']],

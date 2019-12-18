@@ -6,6 +6,7 @@ use common\models\Project;
 use common\models\Task;
 use common\models\User;
 use yii\base\Component;
+use yii\web\NotFoundHttpException;
 
 class TaskService extends Component
 {
@@ -15,10 +16,14 @@ class TaskService extends Component
      *
      * @param Project $project
      * @param User $user
+     * @return boolean
      */
     public function canManage(Project $project, User $user)
     {
-
+        if (\Yii::$app->projectService->hasRole($project, $user, 'manager')) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -28,10 +33,18 @@ class TaskService extends Component
      *
      * @param Task $task
      * @param User $user
+     * @return boolean
      */
     public function canTake(Task $task, User $user)
     {
+        $project = $task->project;
 
+        if (\Yii::$app->projectService->hasRole($project, $user, 'developer')
+            && $task->executor_id === null)
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -40,32 +53,58 @@ class TaskService extends Component
      *
      * @param Task $task
      * @param User $user
+     * @return boolean
      */
     public function canComplete(Task $task, User $user)
     {
-
+        if ($task->executor_id === $user->id
+            && $task->completed_at === null)
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * взять задачу в работу - изменяем start_at и executor_id и возвращаем результат сохранения.
+     * Взять задачу в работу
+     * изменяем start_at и executor_id и возвращаем результат сохранения.
      *
      * @param Task $task
      * @param User $user
+     * @return mixed
      */
     public function takeTask(Task $task, User $user)
     {
+        if ($this->canTake($task, $user)){
+            $task->started_at = time();
+            $task->executor_id = $user->id;
 
+            if ($task->save()) {
+                return $task;
+            }
+            return new NotFoundHttpException('Something went wrong.');
+        }
+        return new NotFoundHttpException('The requested action is not available.');
     }
 
     /**
-     * закончить работу - изменяем completed_at и возвращаем результат сохранения
+     * Закончить работу
+     * изменяем completed_at и возвращаем результат сохранения
      *
      * @param Task $task
+     * @param User $user
+     * @return mixed
      */
-    public function completeTask(Task $task)
+    public function completeTask(Task $task, User $user)
     {
+        if ($this->canComplete($task, $user)){
+            $task->completed_at = time();
 
+            if ($task->save()) {
+                return $task;
+            }
+            return new NotFoundHttpException('Something went wrong.');
+        }
+        return new NotFoundHttpException('The requested action is not available.');
     }
-
-
 }
