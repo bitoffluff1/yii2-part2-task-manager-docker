@@ -2,6 +2,8 @@
 
 namespace frontend\controllers;
 
+use common\models\Project;
+use common\models\User;
 use Yii;
 use common\models\Task;
 use common\models\search\TaskSearch;
@@ -55,6 +57,8 @@ class TaskController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'projectsTitles' => Project::getAllProjectsTitles(),
+            'activeUsers' => User::getAllActiveUsers(),
         ]);
     }
 
@@ -86,6 +90,7 @@ class TaskController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'projectsTitles' => Project::getAllProjectsTitles(),
         ]);
     }
 
@@ -106,6 +111,7 @@ class TaskController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'projectsTitles' => Project::getAllProjectsTitles(),
         ]);
     }
 
@@ -121,6 +127,27 @@ class TaskController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+
+    public function actionTake($id)
+    {
+        $task = Task::findOne($id);
+        $user = User::findOne(Yii::$app->user->getId());
+
+        if (Yii::$app->taskService->takeTask($task, $user)) {
+            return $this->redirect(['view', 'id' => $id]);
+        }
+    }
+
+    public function actionComplete($id)
+    {
+        $task = Task::findOne($id);
+        $user = User::findOne(Yii::$app->user->getId());
+
+        if (Yii::$app->taskService->completeTask($task, $user)) {
+            return $this->redirect(['view', 'id' => $id]);
+        }
     }
 
     /**

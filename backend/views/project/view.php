@@ -36,10 +36,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'title',
             'description:ntext',
             [
+                'label' => 'Status',
                 'attribute' => 'active',
                 'filter' => Project::STATUS_LABELS,
                 'value' => function (Project $model) {
@@ -47,14 +47,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
+                'label' => 'Creator',
                 'attribute' => 'creator_id',
                 'value' => $creator->username,
             ],
             [
+                'label' => 'Updater',
                 'attribute' => 'updater_id',
                 'value' => $updater->username,
             ],
-            'created_at:datetime',
+            'created_at:date',
+            'updated_at:date',
         ],
     ]) ?>
 
@@ -63,7 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             [
                 'attribute' => 'user_id',
-                'label' => 'Пользователь',
+                'label' => 'User',
                 'value' => function (ProjectUser $model) {
                     return $model->user->username;
                 }
@@ -73,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function(ProjectUser $model){
                     return Html::a(
-                        'Перейти',
+                        'Follow',
                         '/user/view?id=' . $model->user_id
                     );
                 }

@@ -8,6 +8,7 @@ use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "project".
@@ -89,23 +90,6 @@ class Project extends ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'title' => 'Название',
-            'description' => 'Описание',
-            'active' => 'Active',
-            'creator_id' => 'Creator ID',
-            'updater_id' => 'Updater ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
     public function getCreator()
     {
         return $this->hasOne(User::class, ['id' => 'creator_id']);
@@ -134,6 +118,13 @@ class Project extends ActiveRecord
     public function getUserRoles()
     {
         return $this->getProjectUsers()->select('role')->indexBy('user_id')->column();
+    }
+
+    public static function getAllProjectsTitles()
+    {
+        $projects = Project::find()->select(['id', 'title'])->all();
+
+        return ArrayHelper::map($projects, 'id', 'title');
     }
 
     /**

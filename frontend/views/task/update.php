@@ -1,9 +1,11 @@
 <?php
 
 use yii\helpers\Html;
+use common\models\Project;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Task */
+/* @var $projectsTitles Project[] */
 
 $this->title = 'Update Task: ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
@@ -16,6 +18,7 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'projectsTitles' => $projectsTitles
     ]) ?>
 
 </div>

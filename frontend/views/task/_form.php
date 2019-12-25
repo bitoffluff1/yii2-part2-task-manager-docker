@@ -1,11 +1,13 @@
 <?php
 
+use common\models\Project;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Task */
 /* @var $form yii\widgets\ActiveForm */
+/* @var $projectsTitles Project[] */
 ?>
 
 <div class="task-form">
@@ -16,13 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'project_id')->textInput() ?>
-
-    <?= $form->field($model, 'executor_id')->textInput() ?>
-
-    <?= $form->field($model, 'started_at')->textInput(['type' => 'date']) ?>
-
-    <?= $form->field($model, 'completed_at')->textInput(['type' => 'date']) ?>
+    <?= $form->field($model, 'project_id')->label('Project')->dropDownList($projectsTitles)?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

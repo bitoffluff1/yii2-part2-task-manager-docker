@@ -74,26 +74,6 @@ class Task extends ActiveRecord
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => 'ID',
-            'title' => 'Название',
-            'description' => 'Описание',
-            'project_id' => 'Project ID',
-            'executor_id' => 'Executor ID',
-            'started_at' => 'Начало',
-            'completed_at' => 'Окончание',
-            'creator_id' => 'Creator ID',
-            'updater_id' => 'Updater ID',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-        ];
-    }
-
-    /**
      * @return ActiveQuery
      */
     public function getExecutor()

@@ -8,6 +8,7 @@ use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 /**
@@ -83,7 +84,7 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => UploadImageBehavior::class,
                 'attribute' => 'avatar',
-                'scenarios' => [self::SCENARIO_UPDATE],
+                'scenarios' => [self::SCENARIO_UPDATE, self::SCENARIO_INSERT],
                 'path' => '@frontend/web/upload/user/{id}',
                 'url' => Yii::$app->params['hosts.front']
                     . Yii::getAlias('@web/upload/user/{id}'),
@@ -109,7 +110,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => self::STATUSES],
 
-            [['avatar'], 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCENARIO_UPDATE]],
+            [['avatar'], 'image', 'extensions' => 'jpg, jpeg, gif, png', 'on' => [self::SCENARIO_UPDATE, self::SCENARIO_INSERT]],
         ];
     }
 
@@ -319,5 +320,12 @@ class User extends ActiveRecord implements IdentityInterface
     public static function find()
     {
         return new UserQuery(get_called_class());
+    }
+
+    public static function getAllActiveUsers()
+    {
+        $projects = User::find()->select(['id', 'username'])->onlyActive()->all();
+
+        return ArrayHelper::map($projects, 'id', 'username');
     }
 }
