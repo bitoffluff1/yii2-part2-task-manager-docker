@@ -136,6 +136,7 @@ class TaskController extends Controller
         $user = User::findOne(Yii::$app->user->getId());
 
         if (Yii::$app->taskService->takeTask($task, $user)) {
+            Yii::$app->session->setFlash('success', "You took the task");
             return $this->redirect(['view', 'id' => $id]);
         }
     }
@@ -146,6 +147,7 @@ class TaskController extends Controller
         $user = User::findOne(Yii::$app->user->getId());
 
         if (Yii::$app->taskService->completeTask($task, $user)) {
+            Yii::$app->session->setFlash('success', "You have completed the task");
             return $this->redirect(['view', 'id' => $id]);
         }
     }
