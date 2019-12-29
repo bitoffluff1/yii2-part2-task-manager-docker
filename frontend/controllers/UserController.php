@@ -46,20 +46,22 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionProfile()
     {
-        return $this->render('view', [
-        'model' => $this->findModel($id),
-    ]);
+        $model = $this->findModel(Yii::$app->user->identity->getId());
+
+        return $this->render('profile', [
+            'model' => $model,
+        ]);
     }
 
-    public function actionProfile()
+    public function actionUpdate()
     {
         $model = $this->findModel(Yii::$app->user->identity->getId());
 
         $model->setScenario(User::SCENARIO_UPDATE);
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['profile']);
         }
 
         return $this->render('update', [

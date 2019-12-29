@@ -29,7 +29,8 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'avatar')
         ->fileInput(['accept' => 'image/*'])
-        ->label(Html::img($model->getThumbUploadUrl('avatar', User::AVATAR_PREVIEW))) ?>
+        ->label(Html::img($model->getThumbUploadUrl('avatar', User::AVATAR_PREVIEW)))
+    ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

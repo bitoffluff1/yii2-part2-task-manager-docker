@@ -11,6 +11,7 @@ use frontend\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
+$this->title = 'Project Manager';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -29,7 +30,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => 'Project manager',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -44,6 +45,7 @@ AppAsset::register($this);
     } else {
         $menuItems[] = ['label' => 'Tasks', 'url' => ['/task/index']];
         $menuItems[] = ['label' => 'Projects', 'url' => ['/project/index']];
+        $menuItems[] = ['label' => 'Profile', 'url' => ['/user/profile']];
 
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
