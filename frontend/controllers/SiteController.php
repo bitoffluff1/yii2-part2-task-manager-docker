@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\User;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -30,14 +31,14 @@ class SiteController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['signup', 'login', 'index'],
+                        'actions' => ['signup', 'login', 'index', 'logout'],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
                     [
                         'actions' => ['logout', 'index'],
                         'allow' => true,
-                        'roles' => ['user'],
+                        'roles' => ['@'],
                     ],
                 ],
             ],
@@ -120,6 +121,10 @@ class SiteController extends Controller
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+            $userRole = Yii::$app->authManager->getRole('user');
+            $user = User::find()->where(['username' => $model->username])->one();
+            Yii::$app->authManager->assign($userRole, $user->id);
+
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
             return $this->goHome();
         }

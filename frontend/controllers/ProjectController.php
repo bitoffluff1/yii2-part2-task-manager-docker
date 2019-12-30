@@ -63,12 +63,12 @@ class ProjectController extends Controller
         $project = $this->findModel($id);
         $user = User::findOne(Yii::$app->user->getId());
         $roles = Yii::$app->projectService->getRoles($project, $user);
+        $manager = Yii::$app->projectService->hasRole($project, $user, 'manager');
 
         return $this->render('view', [
             'model' => $project,
-            'creator' => $project->creator,
-            'updater' => $project->updater,
             'roles' => $roles,
+            'manager' => $manager,
         ]);
     }
 

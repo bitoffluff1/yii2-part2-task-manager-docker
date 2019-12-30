@@ -70,28 +70,38 @@ class TaskController extends Controller
      */
     public function actionView($id)
     {
+        $model = $this->findModel($id);
+        $user = User::findOne(Yii::$app->user->getId());
+        $manager = Yii::$app->projectService->hasRole($model->project, $user, 'manager');
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $model,
+            'manager' => $manager,
         ]);
     }
 
     /**
      * Creates a new Task model.
      * If creation is successful, the browser will be redirected to the 'view' page.
+     * @param $id integer Project->id
      * @return mixed
+     * @throws NotFoundHttpException
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
-        $model = new Task();
+        if ($this->canManage($id)) {
+            $model = new Task();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+            return $this->render('create', [
+                'model' => $model,
+                'projectsTitles' => Project::getAllProjectsTitles(),
+            ]);
+
         }
-
-        return $this->render('create', [
-            'model' => $model,
-            'projectsTitles' => Project::getAllProjectsTitles(),
-        ]);
     }
 
     /**
@@ -105,14 +115,16 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+        if ($this->canManage($model->project_id)) {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
 
-        return $this->render('update', [
-            'model' => $model,
-            'projectsTitles' => Project::getAllProjectsTitles(),
-        ]);
+            return $this->render('update', [
+                'model' => $model,
+                'projectsTitles' => Project::getAllProjectsTitles(),
+            ]);
+        }
     }
 
     /**
@@ -121,12 +133,17 @@ class TaskController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
 
-        return $this->redirect(['index']);
+        if ($this->canManage($model->project_id)) {
+            $model->delete();
+            return $this->redirect(['index']);
+        }
     }
 
 
@@ -163,6 +180,17 @@ class TaskController extends Controller
     {
         if (($model = Task::findOne($id)) !== null) {
             return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    protected function canManage($id) {
+        $project = Project::findOne($id);
+        $user = User::findOne(Yii::$app->user->getId());
+
+        if (Yii::$app->taskService->canManage($project, $user)){
+            return true;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');

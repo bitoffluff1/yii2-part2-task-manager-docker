@@ -21,10 +21,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Task', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php Pjax::begin(); ?>
 
     <?= GridView::widget([
@@ -68,13 +64,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => $activeUsers,
                 'format' => 'raw',
                 'value' => function (Task $model) {
-                    if ($model->creator) {
-                        return Html::a(
-                            $model->creator->username,
-                            '/user/view?id=' . $model->creator_id
-                        );
-                    }
-                    return '-';
+                    return Html::a(
+                        $model->creator->username,
+                        '/user/view?id=' . $model->creator_id
+                    );
                 }
             ],
             [

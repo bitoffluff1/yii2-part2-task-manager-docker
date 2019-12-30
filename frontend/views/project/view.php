@@ -9,7 +9,8 @@ use yii\widgets\DetailView;
 /* @var $model common\models\Project */
 /* @var $creator common\models\User */
 /* @var $updater common\models\User */
-/* @var $roles */
+/* @var $roles array */
+/* @var $manager boolean*/
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
@@ -19,6 +20,12 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="project-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+
+    <?php if ($manager): ?>
+    <p>
+        <?= Html::a('Create Task', ['task/create', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+    </p>
+    <?php endif ?>
 
     <?= DetailView::widget([
         'model' => $model,
@@ -36,19 +43,16 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label' => 'Creator',
                 'attribute' => 'creator_id',
-                'value' => $creator->username,
-            ],
-            [
-                'label' => 'Updater',
-                'attribute' => 'updater_id',
-                'value' => $updater->username,
+                'value' => function (Project $model) {
+                    return $model->creator->username;
+                }
             ],
             'created_at:date',
             'updated_at:date',
         ],
     ]) ?>
 
-    <h3>Roles in the project:</h3>
+    <h3>Roles in this project:</h3>
     <?php foreach ($roles as $role):?>
        <p><?= "- $role" ?></p>
     <?php endforeach; ?>
