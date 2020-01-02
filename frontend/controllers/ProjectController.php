@@ -2,7 +2,6 @@
 
 namespace frontend\controllers;
 
-use common\models\User;
 use Yii;
 use common\models\Project;
 use common\models\search\ProjectSearch;
@@ -61,14 +60,13 @@ class ProjectController extends Controller
     public function actionView($id)
     {
         $project = $this->findModel($id);
-        $user = User::findOne(Yii::$app->user->getId());
-        $roles = Yii::$app->projectService->getRoles($project, $user);
-        $manager = Yii::$app->projectService->hasRole($project, $user, 'manager');
+        $roles = Yii::$app->projectService->getRoles($project, Yii::$app->user->identity);
+        $isManager = Yii::$app->projectService->hasRole($project, Yii::$app->user->identity, 'manager');
 
         return $this->render('view', [
             'model' => $project,
             'roles' => $roles,
-            'manager' => $manager,
+            'isManager' => $isManager,
         ]);
     }
 

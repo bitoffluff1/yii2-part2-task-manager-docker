@@ -71,12 +71,11 @@ class TaskController extends Controller
     public function actionView($id)
     {
         $model = $this->findModel($id);
-        $user = User::findOne(Yii::$app->user->getId());
-        $manager = Yii::$app->projectService->hasRole($model->project, $user, 'manager');
+        $isManager = Yii::$app->projectService->hasRole($model->project, Yii::$app->user->identity, 'manager');
 
         return $this->render('view', [
             'model' => $model,
-            'manager' => $manager,
+            'isManager' => $isManager,
         ]);
     }
 
@@ -89,19 +88,18 @@ class TaskController extends Controller
      */
     public function actionCreate($id)
     {
-        if ($this->canManage($id)) {
-            $model = new Task();
+        $this->canManage($id);
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        $model = new Task();
 
-            return $this->render('create', [
-                'model' => $model,
-                'projectsTitles' => Project::getAllProjectsTitles(),
-            ]);
-
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        return $this->render('create', [
+            'model' => $model,
+            'projectsTitles' => Project::getAllProjectsTitles(),
+        ]);
     }
 
     /**
@@ -115,16 +113,16 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->canManage($model->project_id)) {
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        $this->canManage($model->project_id);
 
-            return $this->render('update', [
-                'model' => $model,
-                'projectsTitles' => Project::getAllProjectsTitles(),
-            ]);
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
+
+        return $this->render('update', [
+            'model' => $model,
+            'projectsTitles' => Project::getAllProjectsTitles(),
+        ]);
     }
 
     /**
@@ -140,33 +138,29 @@ class TaskController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->canManage($model->project_id)) {
-            $model->delete();
-            return $this->redirect(['index']);
-        }
-    }
+        $this->canManage($model->project_id);
 
+        $model->delete();
+        return $this->redirect(['index']);
+
+    }
 
     public function actionTake($id)
     {
         $task = Task::findOne($id);
-        $user = User::findOne(Yii::$app->user->getId());
 
-        if (Yii::$app->taskService->takeTask($task, $user)) {
-            Yii::$app->session->setFlash('success', "You took the task");
-            return $this->redirect(['view', 'id' => $id]);
-        }
+        Yii::$app->taskService->takeTask($task, Yii::$app->user->identity);
+        Yii::$app->session->setFlash('success', "You took the task");
+        return $this->redirect(['view', 'id' => $id]);
     }
 
     public function actionComplete($id)
     {
         $task = Task::findOne($id);
-        $user = User::findOne(Yii::$app->user->getId());
 
-        if (Yii::$app->taskService->completeTask($task, $user)) {
-            Yii::$app->session->setFlash('success', "You have completed the task");
-            return $this->redirect(['view', 'id' => $id]);
-        }
+        Yii::$app->taskService->completeTask($task, Yii::$app->user->identity);
+        Yii::$app->session->setFlash('success', "You have completed the task");
+        return $this->redirect(['view', 'id' => $id]);
     }
 
     /**
@@ -185,14 +179,10 @@ class TaskController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    protected function canManage($id) {
+    protected function canManage($id)
+    {
         $project = Project::findOne($id);
-        $user = User::findOne(Yii::$app->user->getId());
 
-        if (Yii::$app->taskService->canManage($project, $user)){
-            return true;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
+        return Yii::$app->taskService->canManage($project, Yii::$app->user->identity);
     }
 }

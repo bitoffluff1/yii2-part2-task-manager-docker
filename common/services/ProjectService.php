@@ -49,17 +49,12 @@ class ProjectService extends Component
      * @param Project $project
      * @param User $user
      * @param $role
-     * @return boolean
+     * @return array|ProjectUser[]
      */
     public function hasRole($project, $user, $role)
     {
-        $projectUser = ProjectUser::find()
+        return ProjectUser::find()
             ->where(['project_id' => $project->id])
             ->andWhere(['user_id' => $user->id])->andWhere(['role' => $role])->all();
-
-        if ($projectUser) {
-            return true;
-        }
-        return false;
     }
 }

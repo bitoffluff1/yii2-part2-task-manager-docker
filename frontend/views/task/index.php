@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function (Task $model) {
                     return Html::a(
                         $model->project->title,
-                        '/project/view?id=' . $model->project_id
+                        ['project/view', 'id' => $model->project_id]
                     );
                 }
             ],
@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if ($model->executor) {
                         return Html::a(
                             $model->executor->username,
-                            '/user/view?id=' . $model->executor_id
+                            ['user/view', 'id' => $model->executor_id]
                         );
                     }
                     return '-';
@@ -66,47 +66,48 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function (Task $model) {
                     return Html::a(
                         $model->creator->username,
-                        '/user/view?id=' . $model->creator_id
+                        ['user/view', 'id' => $model->creator_id]
                     );
                 }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {update} {delete} {link}',
+                'template' => '{view} {update} {delete} {take} {complete}',
                 'visibleButtons' => [
                     'update' => function (Task $model) {
-                        $user = User::findOne(Yii::$app->user->getId());
-                        return Yii::$app->taskService->canManage($model->project, $user);
+                        return Yii::$app->taskService->canManage($model->project, Yii::$app->user->identity);
                     },
                     'delete' => function (Task $model) {
-                        $user = User::findOne(Yii::$app->user->getId());
-                        return Yii::$app->taskService->canManage($model->project, $user);
+                        return Yii::$app->taskService->canManage($model->project, Yii::$app->user->identity);
+                    },
+                    'take' => function (Task $model) {
+                        return Yii::$app->taskService->canTake($model, Yii::$app->user->identity);
+                    },
+                    'complete' => function (Task $model) {
+                        return Yii::$app->taskService->canComplete($model, Yii::$app->user->identity);
                     },
                 ],
                 'buttons' => [
-                    'link' => function ($url, Task $model) {
-                        $user = User::findOne(Yii::$app->user->getId());
-                        if (Yii::$app->taskService->canTake($model, $user)) {
-                            return Html::a(
-                                'Take to work',
-                                '/task/take?id=' . $model->id,
-                                [
-                                    'data-confirm' => Yii::t('yii', 'Are you sure you want to take this task?'),
-                                    'data-method' => 'post',
-                                ]
-                            );
-                        } else if (Yii::$app->taskService->canComplete($model, $user)) {
-                            return Html::a(
-                                'Complete',
-                                '/task/complete?id=' . $model->id,
-                                [
-                                    'data-confirm' => Yii::t('yii', 'Are you sure you want to complete this task?'),
-                                    'data-method' => 'post',
-                                ]
-                            );
-                        }
-                        return '';
+                    'take' => function ($url, Task $model) {
+                        return Html::a(
+                            'Take to work',
+                            ['task/take', 'id' => $model->id],
+                            [
+                                'data-confirm' => Yii::t('yii', 'Are you sure you want to take this task?'),
+                                'data-method' => 'post',
+                            ]
+                        );
                     },
+                    'complete' => function ($url, Task $model) {
+                        return Html::a(
+                            'Complete',
+                            ['task/complete', 'id' => $model->id],
+                            [
+                                'data-confirm' => Yii::t('yii', 'Are you sure you want to complete this task?'),
+                                'data-method' => 'post',
+                            ]
+                        );
+                    }
                 ],
             ],
         ],

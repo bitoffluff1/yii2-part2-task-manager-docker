@@ -23,7 +23,7 @@ use yii\bootstrap\ActiveForm;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'password')->passwordInput() ?>
+    <?= $form->field($model, 'password')->passwordInput(['value' => '']) ?>
 
     <?= $form->field($model, 'status')->dropDownList(User::STATUS_LABELS) ?>
 

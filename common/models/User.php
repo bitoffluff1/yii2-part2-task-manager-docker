@@ -53,9 +53,9 @@ class User extends ActiveRecord implements IdentityInterface
     ];
 
     const STATUS_LABELS = [
-        self::STATUS_DELETED => 'Удален',
-        self::STATUS_INACTIVE => 'Не активный',
-        self::STATUS_ACTIVE => 'Активный',
+        self::STATUS_DELETED => 'Deleted',
+        self::STATUS_INACTIVE => 'Not active',
+        self::STATUS_ACTIVE => 'Active',
     ];
 
     const AVATAR_PREVIEW = 'preview';

@@ -76,8 +76,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function(ProjectUser $model){
                     return Html::a(
-                        'Follow',
-                        '/user/view?id=' . $model->user_id
+                        'See user profile',
+                        ['user/view', 'id' => $model->user_id]
                     );
                 }
             ],

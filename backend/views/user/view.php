@@ -67,8 +67,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => function(ProjectUser $model){
                     return Html::a(
-                        'Перейти в проект',
-                        '/project/view?id=' . $model->project_id
+                        'See the project',
+                        ['project/view', 'id' => $model->project_id]
                     );
                 }
             ],

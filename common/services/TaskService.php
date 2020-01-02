@@ -16,14 +16,11 @@ class TaskService extends Component
      *
      * @param Project $project
      * @param User $user
-     * @return boolean
+     * @return array|\common\models\ProjectUser[]
      */
     public function canManage(Project $project, User $user)
     {
-        if (\Yii::$app->projectService->hasRole($project, $user, 'manager')) {
-            return true;
-        }
-        return false;
+        return \Yii::$app->projectService->hasRole($project, $user, 'manager');
     }
 
     /**
@@ -39,12 +36,8 @@ class TaskService extends Component
     {
         $project = $task->project;
 
-        if (\Yii::$app->projectService->hasRole($project, $user, 'developer')
-            && $task->executor_id === null)
-        {
-            return true;
-        }
-        return false;
+        return \Yii::$app->projectService->hasRole($project, $user, 'developer')
+            && $task->executor_id === null;
     }
 
     /**
@@ -57,12 +50,8 @@ class TaskService extends Component
      */
     public function canComplete(Task $task, User $user)
     {
-        if ($task->executor_id === $user->id
-            && $task->completed_at === null)
-        {
-            return true;
-        }
-        return false;
+        return $task->executor_id === $user->id
+            && $task->completed_at === null;
     }
 
     /**
@@ -75,7 +64,7 @@ class TaskService extends Component
      */
     public function takeTask(Task $task, User $user)
     {
-        if ($this->canTake($task, $user)){
+        if ($this->canTake($task, $user)) {
             $task->started_at = time();
             $task->executor_id = $user->id;
 
@@ -97,7 +86,7 @@ class TaskService extends Component
      */
     public function completeTask(Task $task, User $user)
     {
-        if ($this->canComplete($task, $user)){
+        if ($this->canComplete($task, $user)) {
             $task->completed_at = time();
 
             if ($task->save()) {

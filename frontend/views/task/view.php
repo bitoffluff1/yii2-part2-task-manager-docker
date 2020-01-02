@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Task */
-/* @var $manager */
+/* @var $isManager */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Tasks', 'url' => ['index']];
@@ -17,16 +17,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php if ($manager): ?>
+    <?php if ($isManager): ?>
         <p>
             <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => 'Are you sure you want to delete this item?',
-                    'method' => 'post',
-                ],
-            ]) ?>
+            <?= Html::a('Delete', ['delete', 'id' => $model->id],
+                [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => 'Are you sure you want to delete this item?',
+                        'method' => 'post',
+                    ],
+                ]) ?>
         </p>
     <?php endif ?>
 
@@ -42,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function (Task $model) {
                     return Html::a(
                         $model->project->title,
-                        '/project/view?id=' . $model->project_id
+                        ['project/view', 'id' => $model->project_id]
                     );
                 }
             ],

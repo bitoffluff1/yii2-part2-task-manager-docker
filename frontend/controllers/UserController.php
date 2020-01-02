@@ -46,6 +46,18 @@ class UserController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Displays a single User model.
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
     public function actionProfile()
     {
         $model = $this->findModel(Yii::$app->user->identity->getId());

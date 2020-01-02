@@ -10,7 +10,7 @@ use yii\widgets\DetailView;
 /* @var $creator common\models\User */
 /* @var $updater common\models\User */
 /* @var $roles array */
-/* @var $manager boolean*/
+/* @var $isManager boolean*/
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php if ($manager): ?>
+    <?php if ($isManager): ?>
     <p>
         <?= Html::a('Create Task', ['task/create', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
     </p>
