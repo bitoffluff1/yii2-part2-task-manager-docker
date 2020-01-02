@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use common\models\Project;
+use common\models\User;
 use Yii;
 use common\models\Task;
 use common\models\search\TaskSearch;
@@ -49,9 +51,14 @@ class TaskController extends Controller
         $searchModel = new TaskSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $query = $dataProvider->query;
+        $query->byUser(Yii::$app->user->getId());
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'projectsTitles' => Project::getAllProjectsTitles(),
+            'activeUsers' => User::getAllActiveUsers(),
         ]);
     }
 
@@ -83,6 +90,7 @@ class TaskController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'projectsTitles' => Project::getAllProjectsTitles(),
         ]);
     }
 
@@ -103,6 +111,7 @@ class TaskController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'projectsTitles' => Project::getAllProjectsTitles(),
         ]);
     }
 
@@ -112,12 +121,32 @@ class TaskController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
      */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionTake($id)
+    {
+        $task = Task::findOne($id);
+
+        Yii::$app->taskService->takeTask($task, Yii::$app->user->identity);
+        Yii::$app->session->setFlash('success', "You took the task");
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    public function actionComplete($id)
+    {
+        $task = Task::findOne($id);
+
+        Yii::$app->taskService->completeTask($task, Yii::$app->user->identity);
+        Yii::$app->session->setFlash('success', "You have completed the task");
+        return $this->redirect(['view', 'id' => $id]);
     }
 
     /**

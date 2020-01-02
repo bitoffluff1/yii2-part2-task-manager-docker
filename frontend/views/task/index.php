@@ -12,7 +12,6 @@ use yii\widgets\Pjax;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $projectsTitles Project[] */
 /* @var $activeUsers User[] */
-/* @var $manager */
 
 $this->title = 'Tasks';
 $this->params['breadcrumbs'][] = $this->title;

@@ -34,9 +34,7 @@ class TaskService extends Component
      */
     public function canTake(Task $task, User $user)
     {
-        $project = $task->project;
-
-        return \Yii::$app->projectService->hasRole($project, $user, 'developer')
+        return \Yii::$app->projectService->hasRole($task->project, $user, 'developer')
             && $task->executor_id === null;
     }
 

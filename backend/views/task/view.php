@@ -1,5 +1,6 @@
 <?php
 
+use common\models\Task;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -26,20 +27,75 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+    <?php if (Yii::$app->taskService->canTake($model, Yii::$app->user->identity)): ?>
+        <p>
+            <?= Html::a(
+                'Take to work',
+                ['task/take', 'id' => $model->id],
+                [
+                    'class' => 'btn btn-success',
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to take this task?'),
+                    'data-method' => 'post',
+                ]
+            ) ?>
+        </p>
+    <?php endif ?>
+
+    <?php if (Yii::$app->taskService->canComplete($model, Yii::$app->user->identity)): ?>
+        <p>
+            <?= Html::a(
+                'Complete',
+                ['task/complete', 'id' => $model->id],
+                [
+                    'class' => 'btn btn-success',
+                    'data-confirm' => Yii::t('yii', 'Are you sure you want to complete this task?'),
+                    'data-method' => 'post',
+                ]
+            ) ?>
+        </p>
+    <?php endif ?>
+
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'title',
             'description:ntext',
-            'project_id',
-            'executor_id',
-            'started_at',
-            'completed_at',
-            'creator_id',
-            'updater_id',
-            'created_at',
-            'updated_at',
+            [
+                'label' => 'Project',
+                'attribute' => 'project_id',
+                'format' => 'raw',
+                'value' => function (Task $model) {
+                    return Html::a(
+                        $model->project->title,
+                        ['project/view', 'id' => $model->project_id]
+                    );
+                }
+            ],
+            [
+                'label' => 'Executor',
+                'attribute' => 'executor_id',
+                'format' => 'raw',
+                'value' => function (Task $model) {
+                    return $model->executor ? Html::a(
+                        $model->executor->username,
+                        ['user/view', 'id' => $model->executor_id]
+                    ) : '-';
+                }
+            ],
+            [
+                'label' => 'Creator',
+                'attribute' => 'creator_id',
+                'format' => 'raw',
+                'value' => function (Task $model) {
+                    return Html::a(
+                        $model->creator->username,
+                        ['user/view', 'id' => $model->creator_id]
+                    );
+
+                }
+            ],
+            'started_at:date',
+            'completed_at:date',
         ],
     ]) ?>
 
